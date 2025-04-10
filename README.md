@@ -18,14 +18,19 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
 
 3.  **Using the Search Tool:**
     *   Once the connection is configured, select the **Tool Name:** `search` from the "Tool" dropdown.
-    *   Configure the search parameters in the **Arguments** field using JSON format.
+    *   Configure the search parameters in the **Arguments** field using JSON format:
+    ```
+    {
+        "q": "{{ $json.chatInput }}"
+    }
+    ```
 
 ## Available Search Parameters
 
 The `search` tool supports the following parameters (only `q` is required):
 
 -   `q` (required): The search query string
--   `categories`: Comma-separated list of search categories
+-   `categories`: Comma-separated list of search categories ("Web, "Images," "Videos," and "News," as well as the non-standard categories of "Social Media," "Music," "Files," "IT," and "Science.")
 -   `engines`: Comma-separated list of search engines to use
 -   `language`: Language code for the search
 -   `time_range`: Time range for results (`day`, `month`, `year`)
