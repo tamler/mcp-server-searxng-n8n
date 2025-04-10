@@ -36,6 +36,8 @@ function getSearxngBaseUrl(): string {
 const SEARXNG_BASE_URL = getSearxngBaseUrl();
 // --- End Argument Parsing ---
 
+const VALID_FORMATS = ["json", "csv", "rss", "html"] as const;
+type SearxngFormat = typeof VALID_FORMATS[number];
 
 // Tool definition for SearxNG search
 const SEARXNG_SEARCH_TOOL: Tool = {
@@ -43,11 +45,11 @@ const SEARXNG_SEARCH_TOOL: Tool = {
   description: 'Perform a search using SearxNG for automation workflows',
   inputSchema: {
     type: 'object',
-    description: "Arguments for the SearxNG search tool. The 'q' parameter is mandatory.", // Added schema description
+    description: "Arguments for the SearxNG search tool. The 'q' parameter is mandatory.",
     properties: {
       q: {
         type: 'string',
-        description: 'The search query string (REQUIRED). Example: "n8n automation"' // Enhanced description
+        description: 'The search query string (REQUIRED). Example: "n8n automation"'
       },
       categories: {
         type: 'string',
@@ -90,6 +92,11 @@ const SEARXNG_SEARCH_TOOL: Tool = {
       disabled_engines: {
         type: 'string',
         description: 'Optional: Comma-separated list of disabled engines'
+      },
+      format: { // Added format parameter
+        type: 'string',
+        description: 'Optional: Output format for results. Defaults to "json".',
+        enum: [...VALID_FORMATS] // Use the defined valid formats
       }
     },
     required: ['q']
@@ -100,7 +107,7 @@ const SEARXNG_SEARCH_TOOL: Tool = {
 const server = new Server(
   {
     name: 'searxng',
-    version: '0.1.1', // Ensure version matches package.json
+    version: '0.1.1', // Keep version consistent for now
   },
   {
     capabilities: {
@@ -133,21 +140,27 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
     );
   }
 
-
   try {
     const searchUrl = new URL('/search', SEARXNG_BASE_URL);
-    
-    // Always set format to JSON
-    searchUrl.searchParams.set('format', 'json');
+    const args = request.params.arguments || {};
 
-    // Add all provided parameters to the search URL
-    if (request.params.arguments) {
-      Object.entries(request.params.arguments).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          searchUrl.searchParams.set(key, value.toString());
-        }
-      });
+    // Determine format, default to json
+    let requestedFormat: SearxngFormat = 'json';
+    if (args.format && typeof args.format === 'string' && (VALID_FORMATS as ReadonlyArray<string>).includes(args.format)) {
+        requestedFormat = args.format as SearxngFormat;
     }
+
+    // Set format parameter for SearxNG API call (unless HTML, which is often the default)
+    if (requestedFormat !== 'html') {
+        searchUrl.searchParams.set('format', requestedFormat);
+    }
+
+    // Add all provided parameters (except format itself) to the search URL
+    Object.entries(args).forEach(([key, value]) => {
+      if (key !== 'format' && value !== undefined && value !== null) {
+        searchUrl.searchParams.set(key, value.toString());
+      }
+    });
 
     const response = await fetch(searchUrl.toString());
     
@@ -155,21 +168,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest)
       // Try to get more specific error from SearxNG if possible
       let errorBody = `SearxNG API error: ${response.status} ${response.statusText}`;
       try {
-        const errorJson: unknown = await response.json();
-        // Type guard to check if errorJson is an object with a string message
-        if (typeof errorJson === 'object' && errorJson !== null && 'message' in errorJson && typeof errorJson.message === 'string') {
-           errorBody += ` - ${errorJson.message}`;
+        // Only try parsing as JSON if we expected JSON
+        if (requestedFormat === 'json') {
+            const errorJson: unknown = await response.json();
+            // Type guard to check if errorJson is an object with a string message
+            if (typeof errorJson === 'object' && errorJson !== null && 'message' in errorJson && typeof errorJson.message === 'string') {
+               errorBody += ` - ${errorJson.message}`;
+            }
+        } else {
+            // For non-JSON, just include the text body if available
+            const errorText = await response.text();
+            if (errorText) {
+                errorBody += ` - ${errorText.substring(0, 200)}...`; // Limit length
+            }
         }
-      } catch (e) { /* Ignore if response body is not JSON */ }
+      } catch (e) { /* Ignore if response body parsing fails */ }
       throw new Error(errorBody);
     }
 
-    const data = await response.json();
+    // Handle response based on requested format
+    let responseText: string;
+    if (requestedFormat === 'json') {
+        const data = await response.json();
+        responseText = JSON.stringify(data, null, 2);
+    } else {
+        responseText = await response.text(); // Get raw text for HTML, CSV, RSS
+    }
 
     return {
       content: [{
-        type: 'text',
-        text: JSON.stringify(data, null, 2)
+        type: 'text', // MCP uses 'text' for all these formats
+        text: responseText
       }]
     };
   } catch (error) {

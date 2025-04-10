@@ -18,19 +18,14 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
 
 3.  **Using the Search Tool:**
     *   Once the connection is configured, select the **Tool Name:** `search` from the "Tool" dropdown.
-    *   Configure the search parameters in the **Arguments** field using JSON format:
-    ```
-    {
-        "q": "{{ $json.chatInput }}"
-    }
-    ```
+    *   Configure the search parameters in the **Arguments** field using JSON format.
 
 ## Available Search Parameters
 
 The `search` tool supports the following parameters (only `q` is required):
 
 -   `q` (required): The search query string
--   `categories`: Comma-separated list of search categories ("Web, "Images," "Videos," and "News," as well as the non-standard categories of "Social Media," "Music," "Files," "IT," and "Science.")
+-   `categories`: Comma-separated list of search categories
 -   `engines`: Comma-separated list of search engines to use
 -   `language`: Language code for the search
 -   `time_range`: Time range for results (`day`, `month`, `year`)
@@ -40,9 +35,11 @@ The `search` tool supports the following parameters (only `q` is required):
 -   `disabled_plugins`: Comma-separated list of disabled plugins
 -   `enabled_engines`: Comma-separated list of enabled engines
 -   `disabled_engines`: Comma-separated list of disabled engines
+-   `format`: Output format (`json`, `csv`, `rss`, `html`). Defaults to `json`.
 
 ## Example n8n Arguments (JSON for Arguments field)
 
+**JSON Output (Default):**
 ```json
 {
   "q": "n8n automation",
@@ -50,6 +47,15 @@ The `search` tool supports the following parameters (only `q` is required):
   "language": "en"
 }
 ```
+
+**HTML Output:**
+```json
+{
+  "q": "n8n automation",
+  "format": "html"
+}
+```
+
 *(Remember to only include the parameters you need)*
 
 ## Development
