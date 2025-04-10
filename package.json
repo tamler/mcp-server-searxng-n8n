@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-searxng-n8n",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "MCP Server for SearxNG search integration with n8n",
   "type": "module",
   "main": "build/index.js",
