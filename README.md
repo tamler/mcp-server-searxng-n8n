@@ -18,7 +18,10 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
 
 3.  **Using the Search Tool:**
     *   Once the connection is configured, select the **Tool Name:** `search` from the "Tool" dropdown.
-    *   Configure the search parameters in the **Arguments** field using JSON format.
+    *   Configure the search parameters in the **Arguments** field using JSON format (for now):
+      {
+        "q": "{{ $json.chatInput }}"
+      }
 
 ## Available Search Parameters
 
