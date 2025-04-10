@@ -12,11 +12,30 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import fetch from 'node-fetch';
 
-// Get the SearxNG base URL from environment variables
-const SEARXNG_BASE_URL = process.env.SEARXNG_BASE_URL;
-if (!SEARXNG_BASE_URL) {
-  throw new Error('SEARXNG_BASE_URL environment variable is required');
+// --- Argument Parsing ---
+function getSearxngBaseUrl(): string {
+  const args = process.argv.slice(2); // Skip node executable and script path
+  let url: string | null = null;
+  const instanceArgPrefix = '--instance=';
+
+  for (const arg of args) {
+    if (arg.startsWith(instanceArgPrefix)) {
+      url = arg.substring(instanceArgPrefix.length);
+      break; // Found it, stop looking
+    }
+  }
+
+  if (!url) {
+    console.error(`Error: Argument format must be --instance=<url>`);
+    console.error("Example: npx mcp-server-searxng-n8n --instance=https://your-searxng-instance.com");
+    process.exit(1); // Exit if argument is missing or malformed
+  }
+  return url;
 }
+
+const SEARXNG_BASE_URL = getSearxngBaseUrl();
+// --- End Argument Parsing ---
+
 
 // Tool definition for SearxNG search
 const SEARXNG_SEARCH_TOOL: Tool = {
@@ -161,4 +180,4 @@ server.connect(transport).catch((error) => {
   process.exit(1);
 });
 
-console.error('SearxNG MCP Server running on stdio');
+console.error(`SearxNG MCP Server running on stdio, using instance: ${SEARXNG_BASE_URL}`);

@@ -7,34 +7,53 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
 This package is designed to be used with the n8n MCP node. Install it globally on your n8n server:
 
 ```bash
-npm install -g mcp-server-searxng-n8n
+# Replace @tamler/ with your npm scope if applicable
+npm install -g @tamler/mcp-server-searxng-n8n
 ```
 
 ## Usage in n8n
 
-1. Set up a SearxNG instance or use an existing one
-2. Install the MCP node in n8n
-3. Configure the MCP node:
-   - Command: `mcp-server-searxng-n8n`
-   - Environment Variables:
-     - Name: `SEARXNG_BASE_URL`
-     - Value: Your SearxNG instance URL (e.g., "https://your-searxng-instance.com")
+1.  **Prerequisites:**
+    *   A running n8n instance.
+    *   Access to a SearxNG instance (e.g., `https://your-searxng-instance.com`).
+    *   The `n8n-nodes-mcp` package installed in your n8n instance.
+
+2.  **Configure MCP Node in n8n:**
+    *   Add an "MCP" node to your workflow.
+    *   In the node settings, configure the server connection:
+        *   **Command:** `npx`
+        *   **Arguments:** `-y @tamler/mcp-server-searxng-n8n --instance=https://your-searxng-instance.com` (Use your actual published package name and SearxNG URL)
+        *   **Environment Variables:** (Leave empty)
+
+3.  **Using the Search Tool:**
+    *   Once the connection is configured, select the `search` tool from the "Tool" dropdown.
+    *   Configure the search parameters in the "Arguments" section (JSON format).
 
 ## Available Search Parameters
 
-The search tool supports the following parameters:
+The `search` tool supports the following parameters:
 
-- `q` (required): The search query string
-- `categories`: Comma-separated list of search categories
-- `engines`: Comma-separated list of search engines to use
-- `language`: Language code for the search
-- `time_range`: Time range for results (`day`, `month`, `year`)
-- `safesearch`: Safe search level (0: None, 1: Moderate, 2: Strict)
-- `image_proxy`: Proxy image results through SearxNG
-- `enabled_plugins`: Comma-separated list of enabled plugins
-- `disabled_plugins`: Comma-separated list of disabled plugins
-- `enabled_engines`: Comma-separated list of enabled engines
-- `disabled_engines`: Comma-separated list of disabled engines
+-   `q` (required): The search query string
+-   `categories`: Comma-separated list of search categories
+-   `engines`: Comma-separated list of search engines to use
+-   `language`: Language code for the search
+-   `time_range`: Time range for results (`day`, `month`, `year`)
+-   `safesearch`: Safe search level (0: None, 1: Moderate, 2: Strict)
+-   `image_proxy`: Proxy image results through SearxNG
+-   `enabled_plugins`: Comma-separated list of enabled plugins
+-   `disabled_plugins`: Comma-separated list of disabled plugins
+-   `enabled_engines`: Comma-separated list of enabled engines
+-   `disabled_engines`: Comma-separated list of disabled engines
+
+## Example n8n Arguments
+
+```json
+{
+  "q": "n8n automation",
+  "engines": "google,duckduckgo",
+  "language": "en"
+}
+```
 
 ## Development
 
@@ -47,7 +66,7 @@ npm run build
 
 Test with:
 ```bash
-SEARXNG_BASE_URL="https://your-searxng-instance.com" npm start
+npm start -- --instance=https://your-searxng-instance.com
 ```
 
 ## License
