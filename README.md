@@ -9,20 +9,23 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
     *   Access to a SearxNG instance (e.g., `https://your-searxng-instance.com`).
     *   The `n8n-nodes-mcp` package installed in your n8n instance.
 
-2.  **Configure MCP Node in n8n:**
+2.  **Configure MCP Node (Server Connection):**
     *   Add an "MCP" node to your workflow.
-    *   In the node settings, configure the server connection:
+    *   In the node settings, under the **Server Connection** section:
         *   **Command:** `npx`
-        *   **Arguments:** `-y mcp-server-searxng-n8n --instance=https://your-searxng-instance.com` (Use your SearxNG URL. The package name assumes you publish as `mcp-server-searxng-n8n`.)
+        *   **Arguments (for npx):** `-y mcp-server-searxng-n8n --instance=https://your-searxng-instance.com`
+            *   Replace `https://your-searxng-instance.com` with your actual SearxNG URL.
+            *   The package name assumes you publish as `mcp-server-searxng-n8n`.
         *   **Environment Variables:** (Leave empty)
 
-3.  **Using the Search Tool:**
-    *   Once the connection is configured, select the **Tool Name:** `search` from the "Tool" dropdown.
-    *   Configure the search parameters in the **Arguments** field using JSON format.
+3.  **Configure MCP Node (Tool Operation):**
+    *   Still in the MCP node settings, under the **Operation** section:
+        *   **Tool Name:** Select `search` from the dropdown.
+        *   **Arguments (for the 'search' tool):** Enter a **JSON object** containing the parameters for your search. See examples below.
 
-## Available Search Parameters
+## Available Search Parameters (for Tool Arguments JSON)
 
-The `search` tool supports the following parameters (only `q` is required):
+The `search` tool supports the following parameters within the JSON object (only `q` is required):
 
 -   `q` (required): The search query string
 -   `categories`: Comma-separated list of search categories
@@ -37,7 +40,7 @@ The `search` tool supports the following parameters (only `q` is required):
 -   `disabled_engines`: Comma-separated list of disabled engines
 -   `format`: Output format (`json`, `csv`, `rss`, `html`). Defaults to `json`.
 
-## Example n8n Arguments (JSON for Arguments field)
+## Example n8n Tool Arguments (JSON)
 
 **JSON Output (Default):**
 ```json
@@ -56,7 +59,7 @@ The `search` tool supports the following parameters (only `q` is required):
 }
 ```
 
-*(Remember to only include the parameters you need)*
+*(Remember to only include the parameters you need in the JSON)*
 
 ## Development
 
