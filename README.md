@@ -17,12 +17,12 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
         *   **Environment Variables:** (Leave empty)
 
 3.  **Using the Search Tool:**
-    *   Once the connection is configured, select the `search` tool from the "Tool" dropdown.
-    *   Configure the search parameters in the "Arguments" section (JSON format).
+    *   Once the connection is configured, select the **Tool Name:** `search` from the "Tool" dropdown.
+    *   Configure the search parameters in the **Arguments** field using JSON format.
 
 ## Available Search Parameters
 
-The `search` tool supports the following parameters:
+The `search` tool supports the following parameters (only `q` is required):
 
 -   `q` (required): The search query string
 -   `categories`: Comma-separated list of search categories
@@ -36,7 +36,7 @@ The `search` tool supports the following parameters:
 -   `enabled_engines`: Comma-separated list of enabled engines
 -   `disabled_engines`: Comma-separated list of disabled engines
 
-## Example n8n Arguments
+## Example n8n Arguments (JSON for Arguments field)
 
 ```json
 {
@@ -45,6 +45,7 @@ The `search` tool supports the following parameters:
   "language": "en"
 }
 ```
+*(Remember to only include the parameters you need)*
 
 ## Development
 
