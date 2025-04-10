@@ -7,8 +7,7 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
 This package is designed to be used with the n8n MCP node. Install it globally on your n8n server:
 
 ```bash
-# Replace @tamler/ with your npm scope if applicable
-npm install -g @tamler/mcp-server-searxng-n8n
+npm install -g mcp-server-searxng-n8n
 ```
 
 ## Usage in n8n
@@ -22,7 +21,7 @@ npm install -g @tamler/mcp-server-searxng-n8n
     *   Add an "MCP" node to your workflow.
     *   In the node settings, configure the server connection:
         *   **Command:** `npx`
-        *   **Arguments:** `-y @tamler/mcp-server-searxng-n8n --instance=https://your-searxng-instance.com` (Use your actual published package name and SearxNG URL)
+        *   **Arguments:** `-y mcp-server-searxng-n8n --instance=https://your-searxng-instance.com` (Use your SearxNG URL)
         *   **Environment Variables:** (Leave empty)
 
 3.  **Using the Search Tool:**
