@@ -21,7 +21,7 @@ A Model Context Protocol (MCP) server specifically designed for using SearxNG wi
 3.  **Configure MCP Node (Tool Operation):**
     *   Still in the MCP node settings, under the **Operation** section:
         *   **Tool Name:** Select `search` from the dropdown.
-        *   **Arguments (for the 'search' tool):** Enter a **JSON object** containing the parameters for your search. See examples below.
+        *   **Arguments (for the 'search' tool):** Enter a **JSON object** containing the parameters for your search. See examples below. You can use n8n expressions like `{{ $json.chatInput }}` as values within the JSON.
 
 ## Available Search Parameters (for Tool Arguments JSON)
 
