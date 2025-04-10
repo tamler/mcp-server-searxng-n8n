@@ -1,0 +1,47 @@
+{
+  "name": "mcp-server-searxng-n8n",
+  "version": "1.0.0",
+  "description": "MCP Server for SearxNG search integration with n8n",
+  "type": "module",
+  "main": "build/index.js",
+  "bin": {
+    "mcp-server-searxng-n8n": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "start": "node build/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tamler/mcp-server-searxng-n8n.git"
+  },
+  "keywords": [
+    "mcp",
+    "searxng",
+    "n8n",
+    "search",
+    "metasearch",
+    "automation"
+  ],
+  "author": "tamler",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "*",
+    "mcp-server-searxng-n8n": "file:mcp-server-searxng-n8n-1.0.0.tgz",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/node-fetch": "^2.6.11",
+    "typescript": "^5.0.0"
+  }
+}
