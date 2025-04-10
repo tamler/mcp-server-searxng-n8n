@@ -36,7 +36,6 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "*",
-    "mcp-server-searxng-n8n": "file:mcp-server-searxng-n8n-1.0.0.tgz",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
